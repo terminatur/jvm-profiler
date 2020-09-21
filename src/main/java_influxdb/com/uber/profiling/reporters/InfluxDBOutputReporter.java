@@ -56,10 +56,10 @@ public class InfluxDBOutputReporter implements Reporter {
         // get DB connection
         ensureInfluxDBCon();
         // format metrics 
-        logger.info("Profiler Name : " + profilerName);
+        logger.debug("Profiler Name : " + profilerName);
         Map<String, Object> formattedMetrics = getFormattedMetrics(metrics);
         for (Map.Entry<String, Object> entry : formattedMetrics.entrySet()) {
-            logger.info("Formatted Metric-Name = " + entry.getKey() + ", Metric-Value = " + entry.getValue());
+            logger.debug("Formatted Metric-Name = " + entry.getKey() + ", Metric-Value = " + entry.getValue());
         }
         // Point
         Point point = Point.measurement(profilerName)
@@ -83,7 +83,7 @@ public class InfluxDBOutputReporter implements Reporter {
         for (Map.Entry<String, Object> entry : metrics.entrySet()) {
             String key = entry.getKey();
             Object value = entry.getValue();
-            logger.info("Raw Metric-Name = " + key + ", Metric-Value = " + value);
+            logger.debug("Raw Metric-Name = " + key + ", Metric-Value = " + value);
             if (value != null && value instanceof List) {
                 List listValue = (List) value;
                 if (!listValue.isEmpty() && listValue.get(0) instanceof String) {
@@ -143,8 +143,8 @@ public class InfluxDBOutputReporter implements Reporter {
                 return;
             }
             String url = "http://" + host + ":" + port;
-            logger.info("Trying to connect InfluxDB using url=" + url + ", database=" + database + ", username="
-                    + username + ", password=" + password);
+            logger.debug("Trying to connect InfluxDB using url=" + url + ", database=" + database + ", username="
+                    + username);
             this.influxDB = InfluxDBFactory.connect(url, username, password);
             // enable batch
             this.influxDB.enableBatch(BatchOptions.DEFAULTS);
@@ -162,19 +162,19 @@ public class InfluxDBOutputReporter implements Reporter {
             if (StringUtils.isNotEmpty(key) && value != null && !value.isEmpty()) {
                 String stringValue = value.get(0);
                 if (key.equals("influxdb.host")) {
-                    logger.info("Got value for host = "+stringValue);
+                    logger.debug("Got value for host = "+stringValue);
                     this.host = stringValue;
                 } else if (key.equals("influxdb.port")) {
-                    logger.info("Got value for port = "+stringValue);
+                    logger.debug("Got value for port = "+stringValue);
                     this.port = stringValue;
                 } else if (key.equals("influxdb.database")) {
-                    logger.info("Got value for database = "+stringValue);
+                    logger.debug("Got value for database = "+stringValue);
                     this.database = stringValue;
                 } else if (key.equals("influxdb.username")) {
-                    logger.info("Got value for username = "+stringValue);
+                    logger.debug("Got value for username = "+stringValue);
                     this.username = stringValue;
                 } else if (key.equals("influxdb.password")) {
-                    logger.info("Got value for password = "+stringValue);
+                    logger.debug("Got value for password.");
                     this.password = stringValue;
                 }
             }
