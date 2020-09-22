@@ -234,6 +234,10 @@
                                     <pattern>okio</pattern>
                                     <shadedPattern>ujagent_shaded.okio</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>com.microsoft.azure</pattern>
+                                    <shadedPattern>ujagent_shaded.com.microsoft.azure</shadedPattern>
+                                </relocation>
                             </relocations>
                             <filters>
                                 <filter>
@@ -249,6 +253,9 @@
                                         <exclude>linux/amd64/liblz4-java.so</exclude>
                                         <exclude>linux/i386/liblz4-java.so</exclude>
                                         <exclude>win32/amd64/liblz4-java.so</exclude>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -382,6 +389,39 @@
                     <groupId>com.datadoghq</groupId>
                     <artifactId>java-dogstatsd-client</artifactId>
                     <version>2.7</version>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>appinsights</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <version>3.0.0</version>
+                        <executions>
+                            <execution>
+                                <id>add-source</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>add-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/main/java_appinsights</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+            <dependencies>
+                <dependency>
+                    <groupId>com.microsoft.azure</groupId>
+                    <artifactId>applicationinsights-core</artifactId>
+                    <version>2.6.0</version>
                 </dependency>
             </dependencies>
         </profile>
