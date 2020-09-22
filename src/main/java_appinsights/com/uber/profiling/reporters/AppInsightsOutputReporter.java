@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.TelemetryConfiguration;
+import com.microsoft.applicationinsights.telemetry.SeverityLevel;
 import org.apache.commons.lang3.StringUtils;
 
 
@@ -53,8 +54,7 @@ public class AppInsightsOutputReporter implements Reporter {
             logger.debug("Formatted Metric-Name = " + entry.getKey() + ", Metric-Value = " + entry.getValue());
         }
 
-        telemetryClient.trackEvent("cluster metrics", formattedMetrics, null);
-        telemetryClient.flush();
+        telemetryClient.trackTrace("cluster metrics", SeverityLevel.Information, formattedMetrics);
     }
 
     // Format metrics in key=value (line protocol)
