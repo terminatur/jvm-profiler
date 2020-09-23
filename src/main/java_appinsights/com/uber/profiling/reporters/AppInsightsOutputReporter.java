@@ -113,6 +113,9 @@ public class AppInsightsOutputReporter implements Reporter {
     public void close() {
         synchronized (this) {
             this.telemetryClient.flush();
+            try {
+                Thread.sleep(5000);
+            } catch (Exception ignored) {}
             this.telemetryClient = null;
         }
     }
