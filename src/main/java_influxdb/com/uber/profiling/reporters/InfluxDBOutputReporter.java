@@ -55,16 +55,33 @@ public class InfluxDBOutputReporter implements Reporter {
     public void report(String profilerName, Map<String, Object> metrics) {
         // get DB connection
         ensureInfluxDBCon();
+
+        String tag = ((String) metrics.getOrDefault("tag", "default_tag")).replaceAll("\\.", "-");
+        String appId = ((String) metrics.getOrDefault("appId", "default_app")).replaceAll("\\.", "-");
+        String host = ((String) metrics.getOrDefault("host", "unknown_host")).replaceAll("\\.", "-");
+        String roll = ((String) metrics.getOrDefault("roll", "unknown_roll")).replaceAll("\\.", "-");
+//        String process = ((String) metrics.computeIfAbsent("processUuid", v -> "unknown_process"))
+//                .replaceAll("\\.", "-");
+
         // format metrics 
         logger.debug("Profiler Name : " + profilerName);
         Map<String, Object> formattedMetrics = getFormattedMetrics(metrics);
         for (Map.Entry<String, Object> entry : formattedMetrics.entrySet()) {
             logger.debug("Formatted Metric-Name = " + entry.getKey() + ", Metric-Value = " + entry.getValue());
         }
+
+        formattedMetrics.remove("tag");
+        formattedMetrics.remove("appId");
+        formattedMetrics.remove("host");
+        formattedMetrics.remove("processUuid");
+
         // Point
         Point point = Point.measurement(profilerName)
                 .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
                 .fields(formattedMetrics)
+                .tag("roll", roll)
+                .tag("host", tag)
+                .tag("appId", appId)
                 .tag("processUuid", (String)metrics.get("processUuid"))
                 .build();
         // BatchPoints
